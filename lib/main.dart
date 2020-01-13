@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quizzler/question.dart';
+import 'quiz.dart';
 
 void main() => runApp(Quizzler());
 
@@ -27,25 +27,12 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreKeeper = [];
-
-  List<Question> questionObjects = [
-    Question(
-      question: 'You can lead a cow down stairs but not up stairs.',
-      answer: false
-    ),
-    Question(
-      question: 'Approximately one quarter of human bones are in the feet.',
-      answer: true
-      ),
-    Question(
-      question: 'A slug\'s blood is green.',
-      answer: true
-    )
-  ];
+  Quiz quiz = Quiz();
 
   int questionTracker = 0;
 
   Icon correct(){
+    quiz.incrementScore();
     return Icon(
       Icons.check,
       color: Colors.green,
@@ -59,22 +46,14 @@ class _QuizPageState extends State<QuizPage> {
     );
   }
 
-  void handleTrue() {
+  void handleAnswer(bool inputAnswer) {
     setState(() {
-      (questionObjects[questionTracker].answer) ? 
+      (inputAnswer == quiz.getAnswer()) ? 
       scoreKeeper.add(correct()):
       scoreKeeper.add(incorrect());
-      questionTracker++;
+      quiz.nextQuestion();
+      if(quiz.getQuestionNumber() == 0) scoreKeeper = [];
     });
-  }
-
-  void handleFalse() {
-    setState(() {
-      !(questionObjects[questionTracker].answer) ? 
-      scoreKeeper.add(correct()):
-      scoreKeeper.add(incorrect());
-      questionTracker++;
-      });
   }
 
   @override
@@ -87,15 +66,34 @@ class _QuizPageState extends State<QuizPage> {
           flex: 5,
           child: Padding(
             padding: EdgeInsets.all(10.0),
-            child: Center(
-              child: Text(
-                (questionTracker < questionObjects.length) ? questionObjects[questionTracker].question: 'Out of questions',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 25.0,
-                  color: Colors.white,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  quiz.getScore(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 25.0,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
+                Text(
+                  quiz.getQuestion(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 25.0,
+                    color: Colors.white,
+                  ),
+                ),
+                Text(
+                  quiz.getQuestionLabel(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 25.0,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ), 
           ),
         ),
@@ -112,7 +110,7 @@ class _QuizPageState extends State<QuizPage> {
                   fontSize: 20.0,
                 ),
               ),
-              onPressed: () => handleTrue(),
+              onPressed: () => handleAnswer(true),
             ),
           ),
         ),
@@ -128,7 +126,7 @@ class _QuizPageState extends State<QuizPage> {
                   color: Colors.white,
                 ),
               ),
-              onPressed: () => handleFalse(),
+              onPressed: () => handleAnswer(false),
             ),
           ),
         ),
