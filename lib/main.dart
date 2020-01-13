@@ -70,23 +70,9 @@ class _QuizPageState extends State<QuizPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  quiz.getScore(),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 25.0,
-                    color: Colors.white,
-                  ),
-                ),
-                Text(
-                  quiz.getQuestion(),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 25.0,
-                    color: Colors.white,
-                  ),
-                ),
-                Text(
-                  quiz.getQuestionLabel(),
+                  '${quiz.getScore()}\n' +
+                  '${quiz.getQuestion()}\n' +
+                  '${quiz.getQuestionLabel()}',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 25.0,
